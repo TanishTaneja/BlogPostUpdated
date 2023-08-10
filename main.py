@@ -10,11 +10,27 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
+import smtplib
+import os
+
+MAIL_ADDRESS = str(os.environ.get("EMAIL_KEY"))
+MAIL_APP_PW = str(os.environ.get("PASSWORD_KEY"))
 
 app = Flask(__name__)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+def send_email(name, email, phone, message):
+    print("Sending email...")
+    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
+    with smtplib.SMTP("smtp.gmail.com",port=587) as connection:
+        print("connection established")
+        connection.starttls()
+        connection.login(MAIL_ADDRESS, MAIL_APP_PW)
+        print("logged in successfully")
+        connection.sendmail(from_addr=MAIL_ADDRESS,to_addrs=MAIL_ADDRESS, msg=email_message)
+        print("Email sent successfully")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -169,9 +185,18 @@ def about():
     return render_template("about.html",isloggedin=current_user)
 
 
-@app.route("/contact")
+@app.route("/contact",methods=["GET","POST"])
 def contact():
-    return render_template("contact.html",isloggedin=current_user)
+    if request.method=="POST":
+        name=request.form["name"]
+        email=request.form["email"]
+        phone=request.form["phone"]
+        message=request.form["message"]
+        print("line before func")
+        send_email(name,email,phone,message)
+        print("line after func")
+        return render_template("contact.html",isloggedin=current_user,msg_sent=True)
+    return render_template("contact.html",isloggedin=current_user,msg_sent=False)
 
 @app.route("/new-post",methods=["GET","POST"])
 @admin_only
