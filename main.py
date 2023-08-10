@@ -193,8 +193,10 @@ def contact():
         phone=request.form["phone"]
         message=request.form["message"]
         print("line before func")
-        send_email(name,email,phone,message)
-        print("line after func")
+        try:
+            send_email(name,email,phone,message)
+        except Exception as e:
+            pass
         return render_template("contact.html",isloggedin=current_user,msg_sent=True)
     return render_template("contact.html",isloggedin=current_user,msg_sent=False)
 
