@@ -22,15 +22,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 def send_email(name, email, phone, message):
-    print("Sending email...")
     email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
     with smtplib.SMTP("smtp.gmail.com",port=587) as connection:
-        print("connection established")
         connection.starttls()
         connection.login(MAIL_ADDRESS, MAIL_APP_PW)
-        print("logged in successfully")
         connection.sendmail(from_addr=MAIL_ADDRESS,to_addrs=MAIL_ADDRESS, msg=email_message)
-        print("Email sent successfully")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -55,7 +51,7 @@ gravatar = Gravatar(
     base_url=None
         )
 
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = str(os.environ.get("CSRF_TOKEN"))
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
