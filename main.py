@@ -7,14 +7,17 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import IntegrityError
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import smtplib
 import os
+from dotenv import load_dotenv
 
-MAIL_ADDRESS = str(os.environ.get("EMAIL_KEY"))
-MAIL_APP_PW = str(os.environ.get("PASSWORD_KEY"))
+load_dotenv()
+
+MAIL_ADDRESS = os.environ.get("EMAIL_KEY")
+MAIL_APP_PW = os.environ.get("PASSWORD_KEY")
 
 app = Flask(__name__)
 
@@ -51,12 +54,13 @@ gravatar = Gravatar(
     base_url=None
         )
 
-app.config['SECRET_KEY'] = str(os.environ.get("CSRF_TOKEN"))
+app.config['SECRET_KEY'] = os.environ.get("CSRF_TOKEN")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.db') 
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -126,7 +130,6 @@ def register():
             return redirect(url_for("login"))
     return render_template("register.html",form=form,isloggedin=current_user )
 
-
 @app.route('/login',methods=["GET","POST"])
 def login():
     form=LoginForm()
@@ -149,12 +152,10 @@ def login():
         
     return render_template("login.html",form=form,isloggedin=current_user)
 
-
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('get_all_posts'))
-
 
 
 @app.route("/post/<int:post_id>",methods=["GET","POST"])
@@ -183,18 +184,15 @@ def about():
 
 @app.route("/contact",methods=["GET","POST"])
 def contact():
-    if request.method=="POST":
+    form=ContactForm()
+    if form.validate_on_submit():
         name=request.form["name"]
         email=request.form["email"]
         phone=request.form["phone"]
         message=request.form["message"]
-        print("line before func")
-        try:
-            send_email(name,email,phone,message)
-        except Exception as e:
-            pass
-        return render_template("contact.html",isloggedin=current_user,msg_sent=True)
-    return render_template("contact.html",isloggedin=current_user,msg_sent=False)
+        send_email(name,email,phone,message)
+        return render_template("contact.html",form=None,isloggedin=current_user,msg_sent=True)
+    return render_template("contact.html",form=form,isloggedin=current_user,msg_sent=False)
 
 @app.route("/new-post",methods=["GET","POST"])
 @admin_only
@@ -253,4 +251,4 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
