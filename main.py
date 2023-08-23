@@ -96,7 +96,7 @@ class BlogPost(db.Model):
 class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text(100))
+    text = db.Column(db.String(100))
     author_id=db.Column(db.Integer, db.ForeignKey('User.id'))
     comment_author = relationship("User",back_populates="comments") #many comments to one user
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
@@ -247,4 +247,4 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
