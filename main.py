@@ -13,6 +13,7 @@ from functools import wraps
 import smtplib
 import os
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
 
 load_dotenv()
 
@@ -59,7 +60,8 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.db') 
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.db') 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db' 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -100,14 +102,36 @@ class Comment(db.Model):
     author_id=db.Column(db.Integer, db.ForeignKey('User.id'))
     comment_author = relationship("User",back_populates="comments") #many comments to one user
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
+    email_id = db.Column(db.Integer, db.ForeignKey("fetched_emails.id"))
     specific_post_comments=relationship("BlogPost",back_populates="comments") # many comments to one post
-    
-db.create_all()
+    specific_email_comments=relationship("FetchedEmail",back_populates="comments") # many comments to one email
+
+class FetchedEmail(db.Model):
+    __tablename__ = "fetched_emails"
+    id = db.Column(db.Integer, primary_key=True)
+    message_id = db.Column(db.String(255), unique=True, nullable=False)
+    subject = db.Column(db.String(250), nullable=False)
+    sender = db.Column(db.String(250), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    date_received=db.Column(db.DateTime, nullable=False)
+    comments=relationship("Comment",back_populates="specific_email_comments")
+
+def add_mails_to_db():
+    from Tldr import mails
+    all_emails=mails()
+    db.session.add_all(all_emails)
+    db.session.commit()
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(add_mails_to_db, 'interval', hours=24)  # Run fetch_mails every 24 hours
+    scheduler.start()
+
 
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
-    return render_template("index.html", all_posts=posts,isloggedin=current_user)
+    emails=FetchedEmail.query.all()
+    return render_template("index.html", all_posts=posts,emails=emails,isloggedin=current_user)
 
 
 @app.route('/register',methods=["GET","POST"])
@@ -177,6 +201,26 @@ def show_post(post_id):
     return render_template("post.html", post=requested_post,isloggedin=current_user,comment_section=comment_section,gravatar=gravatar)
 
 
+@app.route("/email/<int:email_id>",methods=["GET","POST"])
+def show_email(email_id):
+    requested_email = FetchedEmail.query.get(email_id)
+    comment_section=CommentForm()
+    if request.method=="POST":
+        if current_user.is_authenticated:
+            new_comment=Comment(
+                text=comment_section.CommentSection.data,
+                comment_author=current_user,
+                specific_email_comments=requested_email
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+        else:
+            flash("You need to login or register to comment")
+            return redirect(url_for("login"))
+    return render_template("post.html", email=requested_email,isloggedin=current_user,comment_section=comment_section,gravatar=gravatar)
+
+
+
 @app.route("/about")
 def about():
     return render_template("about.html",isloggedin=current_user)
@@ -205,7 +249,7 @@ def add_new_post():
         subtitle=form.subtitle.data, 
         body=form.body.data,
         img_url=form.img_url.data,
-        author=current_user,  # Instead of author_id=current_user.id
+        author=current_user,
         date=date.today().strftime("%B %d, %Y")
 )
         db.session.add(new_post)
@@ -247,4 +291,6 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
+    db.create_all()
+    start_scheduler()
     app.run(debug=True)

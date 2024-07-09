@@ -4,16 +4,24 @@
 <header
   class="masthead"
   style="
-    background-image: url('https://images.unsplash.com/photo-1470092306007-055b6797ca72?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80');
+    background-color: black;
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+
   "
 >
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="site-heading">
-          <h1>Taneja's Blog</h1>
-          <span class="subheading">A collection of random musings.</span>
+        <div class="site-heading" style="margin-top: px;">
+          <h1>Trends.</h1>
+          <span class="subheading">For the Developers</span>
+          <span class="subheading">By the Developers</span>
         </div>
       </div>
     </div>
@@ -21,25 +29,38 @@
 </header>
 
 <!-- Main Content -->
-<div class="container">
+<div class="container" style="padding-top: 100px;">
   <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-      {% for post in all_posts %}
-      <div class="post-preview">
-        <a href="{{ url_for('show_post', post_id=post.id) }}">
-          <h2 class="post-title">{{post.title}}</h2>
-          <h3 class="post-subtitle">{{post.subtitle}}</h3>
-        </a>
-        <p class="post-meta">
-          Posted by
-          <a href="#">{{post.author.name}}</a>
-          on {{post.date}} {% if isloggedin.id ==1%}
-          <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+    {% for post in all_posts %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <a href="{{ url_for('show_post', post_id=post.id) }}">
+            <h5 class="card-title">{{ post.title }}</h5>
+          </a>
+          <h6 class="card-subtitle mb-2 text-muted">{{ post.subtitle }}</h6>
+          <p class="card-text">Posted by <a href="#">{{ post.author.name }}</a> on {{ post.date }}</p>
+          {% if isloggedin.id == 1 %}
+          <a href="{{ url_for('delete_post', post_id=post.id) }}" class="card-link">Delete</a>
           {% endif %}
-        </p>
+        </div>
       </div>
-      <hr />
-      {% endfor %}
+    </div>
+    {% endfor %}
+    {% for email in emails %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <a href="{{ url_for('show_email', email_id=email.id) }}">
+            <h5 class="card-title">{{ email.subject }}</h5>
+          </a>
+          <p class="card-text">Posted by <a href="#">{{ email.sender }}</a> on {{ email.date_received }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
       <!-- New Post -->
       {% if isloggedin.id ==1%}
