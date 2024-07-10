@@ -21,7 +21,7 @@ Werkzeug==1.0.1
 WTForms==2.3.3
 Flask-Login==0.5.0
 gunicorn==21.2.0
-psycopg2-binary==2.9.9
+psycopg2-binary
 email_validator
 python-dotenv
 apscheduler
