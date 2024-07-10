@@ -126,7 +126,6 @@ def start_scheduler():
     scheduler.add_job(add_mails_to_db, 'interval', hours=24)  # Run fetch_mails every 24 hours
     scheduler.start()
 
-
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
