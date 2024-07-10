@@ -130,7 +130,7 @@ def start_scheduler():
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
-    emails=FetchedEmail.query.all()
+    # emails=FetchedEmail.query.all()
     return render_template("index.html", all_posts=posts,emails=emails,isloggedin=current_user)
 
 
