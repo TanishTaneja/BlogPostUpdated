@@ -125,7 +125,7 @@ def add_mails_to_db():
     db.session.commit()
 def start_scheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(add_mails_to_db, 'interval', hours=24)  # Run fetch_mails every 24 hours
+    scheduler.add_job(add_mails_to_db, 'interval',minutes=2)  # Run fetch_mails every 24 hours
     scheduler.start()
 
 
