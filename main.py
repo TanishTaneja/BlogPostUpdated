@@ -115,6 +115,9 @@ class FetchedEmail(db.Model):
     date_received=db.Column(db.DateTime, nullable=False)
     comments=relationship("Comment",back_populates="specific_email_comments")
 
+with app.app_context():
+    db.create_all()
+
 def add_mails_to_db():
     from Tldr import mails
     all_emails=mails()
@@ -290,6 +293,5 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
-    db.create_all()
     start_scheduler()
     app.run(debug=True)
