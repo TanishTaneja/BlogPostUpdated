@@ -66,7 +66,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
 ##CONFIGURE TABLES
 # parent db of both blogpost and comment
 class User(UserMixin,db.Model):
