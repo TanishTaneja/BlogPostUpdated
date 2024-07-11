@@ -118,19 +118,20 @@ class FetchedEmail(db.Model):
 with app.app_context():
     db.create_all()
 
-def add_mails_to_db():
-    from Tldr import mails
-    all_emails=mails()
-    db.session.add_all(all_emails)
-    db.session.commit()
-def start_scheduler():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(add_mails_to_db, 'interval',minutes=2)  # Run fetch_mails every 24 hours
-    scheduler.start()
+# def add_mails_to_db():
+#     pass
+# def start_scheduler():
+#     scheduler = BackgroundScheduler()
+#     scheduler.add_job(add_mails_to_db, 'interval',hours=24)  # Run fetch_mails every 24 hours
+#     scheduler.start()
 
 
 @app.route('/')
 def get_all_posts():
+    from Tldr import mails
+    all_emails=mails()
+    db.session.add_all(all_emails)
+    db.session.commit()
     posts = BlogPost.query.all()
     emails=FetchedEmail.query.all()
     return render_template("index.html", all_posts=posts,emails=emails,isloggedin=current_user)
@@ -293,5 +294,5 @@ def delete_post(post_id):
 
 
 if __name__ == "__main__":
-    start_scheduler()
+    # start_scheduler()
     app.run(debug=True)
