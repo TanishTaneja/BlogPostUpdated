@@ -1,7 +1,7 @@
   <!-- Footer -->
   <footer style="
   margin-top: 50px;
-  background-color: #1c1c22;
+  background-color: #405D72;
   background-attachment: fixed;
   background-size: cover;
 ">
@@ -12,7 +12,7 @@
             <li class="list-inline-item">
               <a href="https://twitter.com/tanish_taneja">
                 <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <!-- <i class="fas fa-circle fa-stack-2x" style="color: whitesmoke;"></i> -->
                   <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
                 </span>
               </a>
@@ -20,7 +20,7 @@
             <li class="list-inline-item">
               <a href="https://www.instagram.com/tanish_tanejaa/">
                 <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <!-- <i class="fas fa-circle fa-stack-2x" style="color: whitesmoke;"></i> -->
                   <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
                 </span>
               </a>
@@ -28,7 +28,7 @@
             <li class="list-inline-item">
               <a href="https://github.com/TanishTaneja">
                 <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <!-- <i class="fas fa-circle fa-stack-2x" style="color: whitesmoke;"></i> -->
                   <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                 </span>
               </a>
@@ -39,13 +39,18 @@
     </div>
   </footer>
 
+  
   <!-- Bootstrap core JavaScript -->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
   <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-
+  
   <!-- Custom scripts for this template -->
   <script src="{{ url_for('static', filename='js/clean-blog.min.js')}}"></script>
-
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
 </body>
 
 </html>

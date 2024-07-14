@@ -44,4 +44,4 @@ def mails():
                     )
             body.append(new_email)
     mail.logout()
-    return body[::-1]
+    return body

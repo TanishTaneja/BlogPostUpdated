@@ -1,6 +1,20 @@
 {% include "header.html" %} {% import "bootstrap/wtf.html" as wtf %}
+<style>
+  @keyframes fadeInAnimation {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  .post-heading {
+    animation: fadeInAnimation ease 3s;
+  }
+</style>
 <!-- Page Header -->
-<header class="masthead" style="background-color: #505393">
+<header class="masthead" style="background-color: #405d72">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
@@ -33,7 +47,11 @@
 <article>
   <div class="container">
     <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
+      <div
+        class="col-lg-8 col-md-10 mx-auto"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
         {%if post%} {{ post.body|safe }}
         <hr />
         {% if isloggedin.id ==1%}
@@ -44,8 +62,8 @@
             >Edit Post</a
           >
         </div>
-        {% endif %} {%endif%} {%if email%} {% for part in
-        email.body.split(".")%} {{ part|safe }}
+        {% endif %} {%endif%} {%if email%} {% for part in email.body.split(". ")%} 
+        {{ part|safe }}
         <hr />
         {% endfor %} {%endif%}
         <!-- Comments Area -->

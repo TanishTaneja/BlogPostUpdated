@@ -13,7 +13,7 @@ from functools import wraps
 import smtplib
 import os
 from dotenv import load_dotenv
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 load_dotenv()
 
@@ -60,8 +60,8 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db' 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.db') 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db' 
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI",'sqlite:///blog.db') 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)

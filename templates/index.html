@@ -1,27 +1,41 @@
 {% include "header.html" %}
+<style>
+  @keyframes fadeInAnimation {
+      0% {
+          opacity: 0;
+      }
+  
+      100% {
+          opacity: 1;
+      }
+  }
+  .fade-in {
+    opacity: 0; /* Ensure elements are initially hidden */
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
 
+
+#subheading1 {
+    animation-delay: 1s;
+}
+
+#subheading2 {
+    animation-delay: 2s;
+}
+
+  </style>
 <!-- Page Header -->
-<header
-  class="masthead"
-  style="
-    background-color: black;
-    background-attachment: fixed;
-    background-size: cover;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-
-
-  "
->
+<header class="masthead" style="background-color: #405D72; background-attachment: fixed; background-size: cover; margin: 0; padding: 0; height: 100vh;">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="site-heading" style="margin-top: px;">
-          <h1>Trends.</h1>
-          <span class="subheading">For the Developers</span>
-          <span class="subheading">By the Developers</span>
+        <div class="site-heading" style="margin-top: 40px;">
+          <h1 class="fade-in">Trends.</h1>
+          <span class="subheading fade-in" id="subheading1">For the Developers</span>
+          <span class="subheading fade-in" id="subheading2">By the Developers</span>
         </div>
       </div>
     </div>
@@ -30,37 +44,45 @@
 
 <!-- Main Content -->
 <div class="container" style="padding-top: 100px;">
-  <div class="row">
+  <div class="row" data-aos="fade-up" data-aos-duration="1000">
     {% for post in all_posts %}
     <div class="col-lg-4 col-md-6 mb-4">
-      <div class="card">
+      <div class="card text-center">
+        <div class="card-header">
+          Featured
+        </div>
         <div class="card-body">
-          <a href="{{ url_for('show_post', post_id=post.id) }}">
-            <h5 class="card-title">{{ post.title }}</h5>
-          </a>
-          <h6 class="card-subtitle mb-2 text-muted">{{ post.subtitle }}</h6>
-          <p class="card-text">Posted by <a href="#">{{ post.author.name }}</a> on {{ post.date }}</p>
-          {% if isloggedin.id == 1 %}
-          <a href="{{ url_for('delete_post', post_id=post.id) }}" class="card-link">Delete</a>
-          {% endif %}
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text">Posted by <a href="#">{{ post.author.name }}</a></p>
+          <a href="{{ url_for('show_post', post_id=post.id) }}" class="btn btn-primary">Read More</a>
+        </div>
+        <div class="card-footer text-muted">
+          {{ post.date }}
         </div>
       </div>
     </div>
     {% endfor %}
-    {% for email in emails %}
+
+    {% for email in emails[::-1] %}
     <div class="col-lg-4 col-md-6 mb-4">
-      <div class="card">
+      <div class="card text-center">
+        <div class="card-header">
+          Featured
+        </div>
         <div class="card-body">
-          <a href="{{ url_for('show_email', email_id=email.id) }}">
-            <h5 class="card-title">{{ email.subject }}</h5>
-          </a>
-          <p class="card-text">Posted by <a href="#">{{ email.sender }}</a> on {{ email.date_received }}</p>
+          <h5 class="card-title">{{ email.subject.split("=")[0] }}</h5>
+          <p class="card-text">Posted by <a href="#">{{ email.sender.strip("<dan@tldrnewsletter.com>") }}</a></p>
+          <a href="{{ url_for('show_email', email_id=email.id) }}" class="btn btn-primary">Read More</a>
+        </div>
+        <div class="card-footer text-muted">
+          {{ email.date_received }}
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+
 
       <!-- New Post -->
       {% if isloggedin.id ==1%}
