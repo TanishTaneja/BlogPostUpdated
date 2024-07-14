@@ -1,7 +1,8 @@
 {% include "header.html" %}
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/about-bg.jpg')}})">
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/about-bg.jpg')}})" data-aos="fade-up"
+  data-aos-duration="1000" >
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -16,7 +17,8 @@
   </header>
 
   <!-- Main Content -->
-  <div class="container">
+  <div class="container" data-aos="fade-up"
+  data-aos-duration="1000">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
       <p>Hello there! I'm Tanish, currently in my third year at Chitkara University, pursuing Computer Science. I'm a hard coder with a keen interest in data science and blockchain development, particularly in the Ethereum ecosystem.</p>
