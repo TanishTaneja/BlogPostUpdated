@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash, abort, request
-from flask_bootstrap import Bootstrap4
+import flask_bootstrap 
 from flask_ckeditor import CKEditor
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -57,7 +57,7 @@ gravatar = Gravatar(
 app.config['SECRET_KEY'] = os.environ.get("CSRF_TOKEN")
 ckeditor = CKEditor(app)
 
-bootstrap=Bootstrap4()
+bootstrap=flask_bootstrap.Bootstrap4()
 bootstrap.init_app(app)
 
 ##CONNECT TO DB
