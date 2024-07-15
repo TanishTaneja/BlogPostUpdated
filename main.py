@@ -21,7 +21,6 @@ MAIL_ADDRESS = os.environ.get("EMAIL_KEY")
 MAIL_APP_PW = os.environ.get("PASSWORD_KEY")
 
 app = Flask(__name__)
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -57,7 +56,9 @@ gravatar = Gravatar(
 
 app.config['SECRET_KEY'] = os.environ.get("CSRF_TOKEN")
 ckeditor = CKEditor(app)
-Bootstrap4(app)
+
+bootstrap=Bootstrap4()
+bootstrap.init_app(app)
 
 ##CONNECT TO DB
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db' 
