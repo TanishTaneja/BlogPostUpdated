@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash, abort, request
-import flask_bootstrap 
+from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -21,6 +21,7 @@ MAIL_ADDRESS = os.environ.get("EMAIL_KEY")
 MAIL_APP_PW = os.environ.get("PASSWORD_KEY")
 
 app = Flask(__name__)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -56,9 +57,7 @@ gravatar = Gravatar(
 
 app.config['SECRET_KEY'] = os.environ.get("CSRF_TOKEN")
 ckeditor = CKEditor(app)
-
-bootstrap=flask_bootstrap.Bootstrap4()
-bootstrap.init_app(app)
+Bootstrap(app)
 
 ##CONNECT TO DB
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db' 
